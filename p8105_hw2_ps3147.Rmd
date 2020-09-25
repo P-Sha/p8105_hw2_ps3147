@@ -13,10 +13,11 @@ library(readxl)
 
 Read the Mr. Trashwheel dataset.
 
+
 ```{r}
 trashwheel_df = 
   read_xlsx(
-    "./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+    "./data/Trash-Wheel-Collection-Totals-7-2020-1.xlsx",
             sheet = "Mr. Trash Wheel",
             range = cell_cols("A:N")) %>% 
   janitor::clean_names() %>% 
