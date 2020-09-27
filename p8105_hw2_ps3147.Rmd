@@ -111,6 +111,16 @@ transit_df_tidy =
   ) 
 ```
 
+There are `r transit_df_tidy %>% filter(route_number == 'A') %>% distinct(station_name, line) %>% nrow()` distinct stations that serve the A train.
+
+ `r transit_df_tidy %>% filter(route_number == 'A'& ada == TRUE) %>% distinct(station_name) %>% nrow()` stations serving A train are ADA compliant.
+
+
+## Problem 3
+
+
+
+
 
 
 
