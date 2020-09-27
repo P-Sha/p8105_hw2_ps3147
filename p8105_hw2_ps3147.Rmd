@@ -91,12 +91,25 @@ transit_df = select(transit_df_raw, line:ada, -exit_only, -staffing, -staff_hour
 The Transit dataset consists of 1,868 observations and 32 variables, with information on subway entrance and exit locations in New York city, different routes available, stations, and ADA compliance information. The above code updates the dataset by keeping `r ncol(transit_df)` of the 32 variables, by cleaning the names, and by converting "entry" variable from character to logical form, assigning true values to YES and false to NO. In this dataset:
 
 There are `r nrow(distinct(transit_df, station_name, line))` distinct stations in the dataset. 
--------------------------------------------------------
 
--------------------------------------------------------------
+There are `r transit_df %>% filter(ada == TRUE) %>% distinct(station_name) %>% nrow()` ADA compliant stations. 
 
 Proportion of station entrances/exits without vending that allow entrance is  `r transit_df %>% filter(entry == TRUE & vending == "NO") %>% nrow()` out of  `r transit_df %>% filter(vending == "NO") %>% nrow()`.
 
+
+Create route name and route number variables.
+
+```{r}
+transit_df_tidy = 
+  transit_df %>% 
+  mutate_at(vars(route1:route11), as.character,
+   replace_na, 'None') %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_name",
+    values_to = "route_number"
+  ) 
+```
 
 
 
