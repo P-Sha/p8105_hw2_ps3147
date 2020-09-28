@@ -92,7 +92,7 @@ The Transit dataset consists of 1,868 observations and 32 variables, with inform
 
 There are `r nrow(distinct(transit_df, station_name, line))` distinct stations in the dataset. 
 
-There are `r transit_df %>% filter(ada == TRUE) %>% distinct(station_name) %>% nrow()` ADA compliant stations. 
+There are `r transit_df %>% filter(ada == TRUE) %>% distinct(station_name, line) %>% nrow()` ADA compliant stations. 
 
 Proportion of station entrances/exits without vending that allow entrance is  `r transit_df %>% filter(entry == TRUE & vending == "NO") %>% nrow()` out of  `r transit_df %>% filter(vending == "NO") %>% nrow()`.
 
@@ -113,10 +113,62 @@ transit_df_tidy =
 
 There are `r transit_df_tidy %>% filter(route_number == 'A') %>% distinct(station_name, line) %>% nrow()` distinct stations that serve the A train.
 
- `r transit_df_tidy %>% filter(route_number == 'A'& ada == TRUE) %>% distinct(station_name) %>% nrow()` stations serving A train are ADA compliant.
+ `r transit_df_tidy %>% filter(route_number == 'A'& ada == TRUE) %>% distinct(station_name, line) %>% nrow()` stations serving A train are ADA compliant.
 
 
 ## Problem 3
+
+Import and clean 'pos-month', 'unemployment' and 'snp' data from FiveThirtyEight dataset.
+
+```{r}
+month_df = 
+  tibble(
+    month = 1:12,
+    month_name = month.name
+  ) 
+month_df = mutate(month_df, month = as.character(month))
+
+pols_df = 
+   read_csv("./data/pols-month.csv") %>% 
+  separate(mon, into = c("year", "month", "day")) 
+  
+ pols_df =
+   left_join(pols_df, month_df, by = "month") %>% 
+   mutate(month = month_name) %>% 
+   mutate(president = 
+            case_when(
+              prez_dem == 1 ~ "dem",
+              prez_gop == 1 ~ "gop")) %>% 
+   select(-month_name, -day, -prez_dem, -prez_gop)
+ 
+ snp_df = 
+   read_csv("./data/snp.csv") %>% 
+  separate(date, into = c("month", "day", "year")) 
+ snp_df =
+    left_join(snp_df, month_df, by = "month") %>% 
+   mutate(month = month_name) %>% 
+   select(-month_name) %>% 
+   relocate(year, month)
+ 
+ unemployment_df =
+    read_csv("./data/unemployment.csv") %>% 
+   pivot_longer(
+      Jan:Dec,
+    names_to = "month",
+    values_to = "unemployed"
+   ) %>% 
+ mutate(
+    month = replace(month, month == "Jan", "January")
+ )
+
+  
+   
+  
+ 
+ 
+   
+ 
+```
 
 
 
