@@ -130,7 +130,8 @@ month_df = mutate(month_df, month = as.character(month))
 
 pols_df = 
    read_csv("./data/pols-month.csv") %>% 
-  separate(mon, into = c("year", "month", "day")) 
+  separate(mon, into = c("year", "month", "day"), convert = TRUE) %>% 
+  mutate(month = as.character(month))
   
  pols_df =
    left_join(pols_df, month_df, by = "month") %>% 
@@ -147,7 +148,8 @@ pols_df =
  snp_df =
     left_join(snp_df, month_df, by = "month") %>% 
    mutate(month = month_name) %>% 
-   select(-month_name) %>% 
+   select(-month_name, -day) %>% 
+   mutate(year = as.integer(year)) %>% 
    relocate(year, month)
  
  unemployment_df =
@@ -157,23 +159,14 @@ pols_df =
     names_to = "month",
     values_to = "unemployed"
    ) %>% 
- mutate(
-    month = replace(month, month == "Jan", "January")
- )
-
-  
-   
-  
- 
- 
-   
- 
+  mutate(month = recode(month, "Jan" = "January", "Feb" = "February", "Mar" = "March", "Apr" = "April", "Jun" = "June", "Jul" = "July", "Aug" = "August", "Sep" = "September", "Oct" = "October", "Nov" = "November", "Dec" = "December"))
 ```
 
+Join dataset "snp" into "pols", and "unemployment" into the result.
 
+```{r}
+snp_pols_df = 
+  left_join(pols_df, snp_df, by = c("year", "month"))
 
+```
 
-
-
-
- 
