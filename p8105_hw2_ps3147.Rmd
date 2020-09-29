@@ -159,7 +159,8 @@ pols_df =
     names_to = "month",
     values_to = "unemployed"
    ) %>% 
-  mutate(month = recode(month, "Jan" = "January", "Feb" = "February", "Mar" = "March", "Apr" = "April", "Jun" = "June", "Jul" = "July", "Aug" = "August", "Sep" = "September", "Oct" = "October", "Nov" = "November", "Dec" = "December"))
+  mutate(month = recode(month, "Jan" = "January", "Feb" = "February", "Mar" = "March", "Apr" = "April", "Jun" = "June", "Jul" = "July", "Aug" = "August", "Sep" = "September", "Oct" = "October", "Nov" = "November", "Dec" = "December")) %>% 
+   rename(year = Year)
 ```
 
 Join dataset "snp" into "pols", and "unemployment" into the result.
@@ -168,11 +169,11 @@ Join dataset "snp" into "pols", and "unemployment" into the result.
 snp_pols_df = 
   left_join(pols_df, snp_df, by = c("year", "month"))
 
-final_df =
+pols_snp_unmply_df =
   left_join(snp_pols_df, unemployment_df, by = c("year", "month"))
 ```
 
 
-The three datasets used in this problem are from the website FiveThirtyEight which focuses on poll analyses in politics, science, and many other fields. The datasets pols_month, snp, and unemployment all run through the similar timeframe, from the year 1947 to 2015. The data in pols_month primarily depicts the number of politicians who are democratic or republican at any given time. The snp-data is about the S&P stock market at any given date of observation, and the unemployment-data shows the percent unemployed for a given month in a given year in the timeframe. 
-The resulting dataset obtained by merging snp and then unemplyment into pols_month was obtained using year and month as keys, and contains `r nrow(final_df)` rows and `r ncol(final_df)` columns. It shows monthly information from `r summarise(final_df, min(year))`to `r summarise(final_df, max(year))` on the party affiliation of the president, the stock market, and the unemployment rate.
+The three datasets used in this problem are from the website FiveThirtyEight which focuses on poll analyses in politics, science, and many other fields. The datasets pols_month, snp, and unemployment all run through the similar timeframe, from the year 1947 to 2015. The data in pols_month primarily depicts the number of politicians who are democratic or republican at any given time. The snp-data is about the S&P stock market at any given date of observation, and the unemployment-data shows the percent unemployed for a given month in a given year during this timeframe. 
+The resulting dataset obtained by merging snp and then unemplyment into pols_month was obtained using year and month as keys, and contains `r nrow(pols_snp_unmply_df)` rows and `r ncol(pols_snp_unmply_df)` columns. It shows monthly information from `r summarise(pols_snp_unmply_df, min(year))` to `r summarise(pols_snp_unmply_df, max(year))` on the party affiliation of the president, the stock market, and the unemployment rate.
 
